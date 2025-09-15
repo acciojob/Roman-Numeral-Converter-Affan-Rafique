@@ -1,42 +1,36 @@
-// index.js
-const express = require("express");
-const app = express();
-app.use(express.json());
-
-// Define function BEFORE using it
 function convertToRoman(num) {
-  const map = [
-    { value: 1000, numeral: "M" },
-    { value: 900, numeral: "CM" },
-    { value: 500, numeral: "D" },
-    { value: 400, numeral: "CD" },
-    { value: 100, numeral: "C" },
-    { value: 90, numeral: "XC" },
-    { value: 50, numeral: "L" },
-    { value: 40, numeral: "XL" },
-    { value: 10, numeral: "X" },
-    { value: 9, numeral: "IX" },
-    { value: 5, numeral: "V" },
-    { value: 4, numeral: "IV" },
-    { value: 1, numeral: "I" }
+  if (num === 0) return ""; // Romans had no zero
+
+  const romanMap = [
+    ["M", 1000],
+    ["CM", 900],
+    ["D", 500],
+    ["CD", 400],
+    ["C", 100],
+    ["XC", 90],
+    ["L", 50],
+    ["XL", 40],
+    ["X", 10],
+    ["IX", 9],
+    ["V", 5],
+    ["IV", 4],
+    ["I", 1]
   ];
+
   let result = "";
-  for (let i of map) {
-    while (num >= i.value) {
-      result += i.numeral;
-      num -= i.value;
+  for (let [symbol, value] of romanMap) {
+    while (num >= value) {
+      result += symbol;
+      num -= value;
     }
   }
   return result;
 }
 
-// Route
-app.post("/romanConverter", (req, res) => {
-  const { input } = req.body;
-  const roman = convertToRoman(input);   // ✅ function is available
-  res.json({ roman });
-});
+// ✅ Export so Cypress can find it
+if (typeof module !== "undefined") {
+  module.exports = convertToRoman;
+}
 
-app.listen(3000, () => console.log("Server running on port 3000"));
 
    
